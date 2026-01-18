@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>NAKAYAMA Gallery - Premium Gravure Collection</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --color-bg: #0a0a0a;
+            --color-surface: #1a1a1a;
+            --color-text: #e8e8e8;
+            --color-text-dim: #a0a0a0;
+            --color-accent: #d4af37;
+            --color-accent-dim: #8b7428;
+            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background: var(--color-bg);
+            color: var(--color-text);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+            touch-action: pan-y;
+        }
+
+        .app-container {
+            max-width: 100%;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Header */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+            padding: 1rem;
+            animation: slideDown 0.6s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            font-weight: 300;
+            letter-spacing: 2px;
+            color: var(--color-accent);
+        }
+
+        .menu-icon {
+            width: 24px;
+            height: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            cursor: pointer;
+        }
+
+        .menu-icon span {
+            width: 100%;
+            height: 2px;
+            background: var(--color-accent);
+            transition: var(--transition);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 3rem 1.5rem;
+            text-align: center;
+            background: linear-gradient(180deg, rgba(212, 175, 55, 0.05) 0%, transparent 100%);
+            animation: fadeIn 0.8s ease-out 0.3s both;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.5rem;
+            font-weight: 300;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: 0.95rem;
+            color: var(--color-text-dim);
+            letter-spacing: 0.5px;
+            font-weight: 300;
+        }
+
+        .photographer-name {
+            margin-top: 1.5rem;
+            font-size: 0.85rem;
+            letter-spacing: 3px;
+            color: var(--color-accent);
+            text-transform: uppercase;
+        }
+
+        /* Collections Grid */
+        .collections {
+            padding: 2rem 1rem 4rem;
+            animation: fadeIn 0.8s ease-out 0.5s both;
+        }
+
+        .section-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            font-weight: 400;
+            letter-spacing: 1px;
+            margin-bottom: 1.5rem;
+            padding: 0 0.5rem;
+        }
+
+        .collection-grid {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .collection-card {
+            position: relative;
+            background: var(--color-surface);
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 1px solid rgba(212, 175, 55, 0.1);
+        }
+
+        .collection-card:active {
+            transform: scale(0.98);
+        }
+
+        .collection-image {
+            width: 100%;
+            aspect-ratio: 3/4;
+            background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .collection-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .sample-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(212, 175, 55, 0.95);
+            color: #0a0a0a;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            backdrop-filter: blur(10px);
+            z-index: 10;
+        }
+
+        .locked-badge {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--color-text);
+            backdrop-filter: blur(10px);
+        }
+
+        .collection-info {
+            padding: 1.25rem;
+        }
+
+        .collection-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.3rem;
+            font-weight: 400;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.5px;
+        }
+
+        .collection-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid rgba(212, 175, 55, 0.1);
+        }
+
+        .photo-count {
+            font-size: 0.85rem;
+            color: var(--color-text-dim);
+        }
+
+        .price {
+            font-weight: 500;
+            color: var(--color-accent);
+            font-size: 1.1rem;
+        }
+
+        .price.free {
+            color: #4ade80;
+        }
+
+        /* Viewer Modal */
+        .viewer-modal {
+            position: fixed;
+            inset: 0;
+            background: var(--color-bg);
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+        }
+
+        .viewer-modal.active {
+            display: flex;
+            animation: modalFadeIn 0.3s ease-out;
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .viewer-header {
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+        }
+
+        .close-btn {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 1.5rem;
+            color: var(--color-text);
+        }
+
+        .close-btn:active {
+            transform: scale(0.9);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .viewer-content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .photo-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .photo-slide {
+            width: 100%;
+            height: 100%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            inset: 0;
+        }
+
+        .photo-slide.active {
+            display: flex;
+            animation: photoSlideIn 0.4s ease-out;
+        }
+
+        @keyframes photoSlideIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .photo-image {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+
+        .video-player {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 8px;
+        }
+
+        .blur-overlay {
+            filter: blur(20px);
+            opacity: 0.7;
+        }
+
+        .unlock-overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(5px);
+            z-index: 10;
+        }
+
+        .lock-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--color-accent);
+        }
+
+        .unlock-text {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            padding: 0 2rem;
+        }
+
+        .unlock-btn {
+            padding: 0.9rem 2rem;
+            background: var(--color-accent);
+            color: var(--color-bg);
+            border: none;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            letter-spacing: 0.5px;
+        }
+
+        .unlock-btn:active {
+            transform: scale(0.95);
+            background: var(--color-accent-dim);
+        }
+
+        .viewer-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            gap: 1rem;
+            width: 100%;
+            justify-content: space-between;
+            padding: 0 1rem;
+            pointer-events: none;
+        }
+
+        .nav-btn {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            pointer-events: auto;
+            color: var(--color-text);
+            font-size: 1.5rem;
+        }
+
+        .nav-btn:active {
+            transform: scale(0.9);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .viewer-footer {
+            padding: 1.5rem;
+            border-top: 1px solid rgba(212, 175, 55, 0.1);
+            text-align: center;
+        }
+
+        .photo-info {
+            font-size: 0.9rem;
+            color: var(--color-text-dim);
+            margin-bottom: 0.5rem;
+        }
+
+        .photo-counter {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            color: var(--color-accent);
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(212, 175, 55, 0.1);
+            padding: 0.75rem 1rem 1.25rem;
+            display: flex;
+            justify-content: space-around;
+            z-index: 90;
+            animation: slideUp 0.6s ease-out 0.7s both;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.4rem;
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--color-text-dim);
+            flex: 1;
+            padding: 0.5rem;
+        }
+
+        .nav-item:active {
+            transform: scale(0.95);
+        }
+
+        .nav-item.active {
+            color: var(--color-accent);
+        }
+
+        .nav-icon {
+            font-size: 1.5rem;
+        }
+
+        .nav-label {
+            font-size: 0.7rem;
+            letter-spacing: 0.5px;
+        }
+
+        /* Responsive adjustments */
+        @media (min-width: 768px) {
+            .collection-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">NAKAYAMA</div>
+                <div class="menu-icon">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="hero">
+            <h1 class="hero-title">Premium<br>Gravure Collection</h1>
+            <p class="hero-subtitle">未公開作品を含む<br>プレミアムグラビアコレクション</p>
+            <div class="photographer-name">Masafumi Nakayama</div>
+        </section>
+
+        <!-- Collections -->
+        <section class="collections">
+            <h2 class="section-title">Collections</h2>
+            <div class="collection-grid">
+                <!-- Collection 1 - Free Sample -->
+                <div class="collection-card" onclick="openViewer('sample', 0)">
+                    <div class="collection-image">
+                        <img src="sample1.png" alt="Sample Collection">
+                        <span class="sample-badge">無料サンプル</span>
+                    </div>
+                    <div class="collection-info">
+                        <h3 class="collection-title">Sample Collection</h3>
+                        <div class="collection-meta">
+                            <span class="photo-count">5作品 (写真4枚+動画1本)</span>
+                            <span class="price free">無料</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Collection 2 - Premium -->
+                <div class="collection-card" onclick="openViewer('premium', 0)">
+                    <div class="collection-image">
+                        <img src="sample2.png" alt="Premium Collection">
+                        <span class="sample-badge locked-badge">🔒 Premium</span>
+                    </div>
+                    <div class="collection-info">
+                        <h3 class="collection-title">Sunset Series</h3>
+                        <div class="collection-meta">
+                            <span class="photo-count">28枚の写真</span>
+                            <span class="price">¥1,200</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Collection 3 - Premium -->
+                <div class="collection-card" onclick="openViewer('premium', 0)">
+                    <div class="collection-image">
+                        <img src="sample3.png" alt="Exclusive Edition">
+                        <span class="sample-badge locked-badge">🔒 Premium</span>
+                    </div>
+                    <div class="collection-info">
+                        <h3 class="collection-title">Urban Elegance</h3>
+                        <div class="collection-meta">
+                            <span class="photo-count">32枚の写真</span>
+                            <span class="price">¥1,500</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Collection 4 - Premium -->
+                <div class="collection-card" onclick="openViewer('premium', 0)">
+                    <div class="collection-image">
+                        <img src="sample4.png" alt="Limited Series">
+                        <span class="sample-badge locked-badge">🔒 Premium</span>
+                    </div>
+                    <div class="collection-info">
+                        <h3 class="collection-title">Natural Beauty</h3>
+                        <div class="collection-meta">
+                            <span class="photo-count">24枚の写真</span>
+                            <span class="price">¥980</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Viewer Modal -->
+        <div class="viewer-modal" id="viewerModal">
+            <div class="viewer-header">
+                <div class="photo-counter" id="photoCounter">1 / 5</div>
+                <div class="close-btn" onclick="closeViewer()">×</div>
+            </div>
+            <div class="viewer-content">
+                <div class="photo-container" id="photoContainer">
+                    <!-- Photos will be dynamically inserted here -->
+                </div>
+                <div class="viewer-nav">
+                    <div class="nav-btn" onclick="prevPhoto()">‹</div>
+                    <div class="nav-btn" onclick="nextPhoto()">›</div>
+                </div>
+            </div>
+            <div class="viewer-footer">
+                <div class="photo-info">スワイプまたはボタンで写真を切り替え</div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <div class="nav-item active">
+                <div class="nav-icon">🏠</div>
+                <div class="nav-label">ホーム</div>
+            </div>
+            <div class="nav-item">
+                <div class="nav-icon">🔍</div>
+                <div class="nav-label">検索</div>
+            </div>
+            <div class="nav-item">
+                <div class="nav-icon">📚</div>
+                <div class="nav-label">ライブラリ</div>
+            </div>
+            <div class="nav-item">
+                <div class="nav-icon">👤</div>
+                <div class="nav-label">プロフィール</div>
+            </div>
+        </nav>
+    </div>
+
+    <script>
+        let currentPhotoIndex = 0;
+        let currentCollection = 'sample';
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        const samplePhotos = [
+            { type: 'image', src: 'sample1.png', title: 'Photo 1' },
+            { type: 'image', src: 'sample2.png', title: 'Photo 2' },
+            { type: 'image', src: 'sample3.png', title: 'Photo 3' },
+            { type: 'image', src: 'sample4.png', title: 'Photo 4' },
+            { type: 'video', src: 'sample5.mp4', title: 'Video' }
+        ];
+
+        const premiumPhotos = [
+            { type: 'locked', title: 'Premium Photo 1' },
+            { type: 'locked', title: 'Premium Photo 2' },
+            { type: 'locked', title: 'Premium Photo 3' }
+        ];
+
+        function openViewer(collectionType, index) {
+            currentCollection = collectionType;
+            currentPhotoIndex = index;
+            const modal = document.getElementById('viewerModal');
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            renderPhotos();
+        }
+
+        function closeViewer() {
+            const modal = document.getElementById('viewerModal');
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+            
+            // Stop all videos when closing
+            const videos = document.querySelectorAll('video');
+            videos.forEach(video => {
+                video.pause();
+                video.currentTime = 0;
+            });
+        }
+
+        function renderPhotos() {
+            const container = document.getElementById('photoContainer');
+            const photos = currentCollection === 'sample' ? samplePhotos : premiumPhotos;
+            
+            container.innerHTML = '';
+            
+            photos.forEach((photo, index) => {
+                const slide = document.createElement('div');
+                slide.className = 'photo-slide' + (index === currentPhotoIndex ? ' active' : '');
+                
+                if (photo.type === 'image') {
+                    slide.innerHTML = `
+                        <img src="${photo.src}" alt="${photo.title}" class="photo-image">
+                    `;
+                } else if (photo.type === 'video') {
+                    slide.innerHTML = `
+                        <video class="video-player" controls playsinline>
+                            <source src="${photo.src}" type="video/mp4">
+                            お使いのブラウザは動画再生に対応していません。
+                        </video>
+                    `;
+                } else {
+                    slide.innerHTML = `
+                        <div style="position: relative; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
+                            <div class="photo-image blur-overlay" style="width: 90%; aspect-ratio: 3/4; background: linear-gradient(225deg, #3a3a3a 0%, #2a2a2a 50%, #1a1a1a 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-family: 'Cormorant Garamond', serif; font-size: 2rem; color: rgba(212, 175, 55, 0.4);">
+                                Premium<br>Photo
+                            </div>
+                            <div class="unlock-overlay">
+                                <div class="lock-icon">🔒</div>
+                                <div class="unlock-text">このコレクションをアンロックして<br>全ての写真を閲覧</div>
+                                <button class="unlock-btn" onclick="handleUnlock()">¥${currentCollection === 'sample' ? '1,200' : '1,500'}で購入</button>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                container.appendChild(slide);
+            });
+
+            updateCounter();
+            
+            // Auto-play video if it's the current slide
+            if (photos[currentPhotoIndex].type === 'video') {
+                const video = container.querySelector('.photo-slide.active video');
+                if (video) {
+                    video.play().catch(e => console.log('Auto-play prevented:', e));
+                }
+            }
+        }
+
+        function updateCounter() {
+            const photos = currentCollection === 'sample' ? samplePhotos : premiumPhotos;
+            document.getElementById('photoCounter').textContent = `${currentPhotoIndex + 1} / ${photos.length}`;
+        }
+
+        function nextPhoto() {
+            const photos = currentCollection === 'sample' ? samplePhotos : premiumPhotos;
+            
+            // Pause current video if playing
+            const currentVideo = document.querySelector('.photo-slide.active video');
+            if (currentVideo) {
+                currentVideo.pause();
+            }
+            
+            if (currentPhotoIndex < photos.length - 1) {
+                currentPhotoIndex++;
+                renderPhotos();
+            }
+        }
+
+        function prevPhoto() {
+            // Pause current video if playing
+            const currentVideo = document.querySelector('.photo-slide.active video');
+            if (currentVideo) {
+                currentVideo.pause();
+            }
+            
+            if (currentPhotoIndex > 0) {
+                currentPhotoIndex--;
+                renderPhotos();
+            }
+        }
+
+        function handleUnlock() {
+            alert('ここでOrynthの課金システムと連携します。\n実装時にはOrynthのAPI/SDKを使用します。');
+        }
+
+        // Touch swipe support
+        const modal = document.getElementById('viewerModal');
+        
+        modal.addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, false);
+
+        modal.addEventListener('touchend', e => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        }, false);
+
+        function handleSwipe() {
+            if (touchEndX < touchStartX - 50) {
+                nextPhoto();
+            }
+            if (touchEndX > touchStartX + 50) {
+                prevPhoto();
+            }
+        }
+
+        // Close modal on background click
+        document.getElementById('viewerModal').addEventListener('click', (e) => {
+            if (e.target.id === 'viewerModal') {
+                closeViewer();
+            }
+        });
+    </script>
+</body>
+</html>
